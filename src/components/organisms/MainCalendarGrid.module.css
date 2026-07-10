@@ -1,0 +1,274 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.titleSection h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.viewToggle {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.toggleGroup {
+  display: flex;
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-md);
+  padding: 0.25rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.toggleBtn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.activeToggle {
+  background-color: var(--color-flight-bg);
+  color: var(--color-primary);
+}
+
+.navGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.navArrow {
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-sm);
+}
+
+.todayBtn {
+  background-color: var(--color-flight-bg);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.calendarWrapper {
+  background-color: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.scrollArea {
+  overflow: auto;
+  height: 650px;
+  min-height: 650px;
+  max-height: 650px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 60px repeat(7, minmax(120px, 1fr));
+  grid-template-rows: auto repeat(24, minmax(100px, 1fr));
+  position: relative;
+  min-width: 800px;
+}
+
+.timeColumnHeader {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  background-color: var(--bg-surface);
+}
+
+.iconBox {
+  background-color: var(--bg-main);
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+}
+
+.dayHeader {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  background-color: var(--bg-surface);
+}
+
+.dayHeader:last-child {
+  border-right: none;
+}
+
+.dayName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dayDate {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.dayHeaderActive .dayName,
+.dayHeaderActive .dayDate {
+  color: var(--color-primary);
+}
+
+.timeLabel {
+  padding: 1rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background-color: var(--bg-surface);
+}
+
+.cell {
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  position: relative;
+}
+
+.cell:last-child {
+  border-right: none;
+}
+
+.currentTimeBadge {
+  background-color: #FF5A5F;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  position: relative;
+  z-index: 5;
+}
+
+.currentTimeline {
+  position: absolute;
+  left: 0;
+  right: -1px;
+  height: 2px;
+  background-color: #FF5A5F;
+  z-index: 4;
+}
+
+.eventCard {
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 3;
+  margin: 0 4px;
+  position: relative;
+}
+
+.eventTime {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.eventTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: auto;
+}
+
+.eventFooter {
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+/* Event Variations */
+.eventPersonal {
+  background-color: var(--color-personal-bg);
+  color: var(--color-personal);
+}
+.eventPersonal .eventTitle { color: var(--text-primary); }
+
+.eventWork {
+  background-color: var(--color-work-bg);
+  color: var(--color-work);
+}
+.eventWork .eventTitle { color: var(--text-primary); }
+
+.eventFlight {
+  background-color: var(--color-flight-bg);
+  color: var(--color-flight);
+}
+.eventFlight .eventTitle { color: var(--text-primary); }
+
+.eventPersonalOutline {
+  background-color: transparent;
+  border: 1px solid var(--color-personal);
+  color: var(--color-personal);
+}
+.eventPersonalOutline .eventTitle { color: var(--text-primary); }
+
+.badgeTop {
+  position: absolute;
+  top: -12px;
+  left: 12px;
+  background-color: #FF5A5F;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.badgeTop .moon { font-size: 0.5rem; }
+
+.modalWrapper {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 320px;
+}

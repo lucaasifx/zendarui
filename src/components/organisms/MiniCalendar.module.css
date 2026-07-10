@@ -1,0 +1,96 @@
+.calendarContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.monthTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.navButtons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.dayOfWeek {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.emptyDay {
+  font-size: 0.85rem;
+  color: var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+}
+
+.dayCell {
+  position: relative;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dayCell:hover {
+  background-color: var(--bg-main);
+}
+
+.today {
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+}
+
+.today:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.dots {
+  position: absolute;
+  bottom: 4px;
+  display: flex;
+  gap: 2px;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
+.dotPersonal { background-color: var(--color-personal); }
+.dotWork { background-color: var(--color-work); }
+
+/* Se o dia for "hoje", os pontos precisam contrastar com o roxo. Usaremos branco. */
+.today .dot {
+  background-color: var(--text-inverse);
+  opacity: 0.8;
+}

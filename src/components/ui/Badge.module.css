@@ -1,0 +1,40 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.iconWrapper > svg {
+  width: 12px;
+  height: 12px;
+}
+
+.type-personal {
+  background-color: var(--color-personal-bg);
+  color: var(--color-personal);
+}
+
+.type-work {
+  background-color: var(--color-work-bg);
+  color: var(--color-work);
+}
+
+.type-flight {
+  background-color: var(--color-flight-bg);
+  color: var(--color-flight);
+}
+
+.type-default {
+  background-color: var(--bg-main);
+  color: var(--text-secondary);
+}

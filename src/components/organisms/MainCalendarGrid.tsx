@@ -4,20 +4,27 @@ import { Button } from '../ui/Button';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Folder } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import type { CalendarTaskDto } from '../../store/useAppStore';
+import { startOfWeek, addDays, format, isSameDay, isSameWeek } from 'date-fns';
 
 export const MainCalendarGrid: React.FC = () => {
   const tasks = useAppStore(state => state.tasks);
   const openModal = useAppStore(state => state.openModal);
+  const currentDate = useAppStore(state => state.currentDate);
+  const nextWeek = useAppStore(state => state.nextWeek);
+  const prevWeek = useAppStore(state => state.prevWeek);
+  const setToday = useAppStore(state => state.setToday);
 
-  const days = [
-    { name: 'Monday', date: '21/09' },
-    { name: 'Tuesday', date: '22/09', active: true },
-    { name: 'Wednesday', date: '23/09' },
-    { name: 'Thursday', date: '24/09' },
-    { name: 'Friday', date: '25/09' },
-    { name: 'Saturday', date: '26/09' },
-    { name: 'Sunday', date: '27/09' }
-  ];
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Sunday is 0
+
+  const days = Array.from({ length: 7 }).map((_, i) => {
+    const dayDate = addDays(weekStart, i);
+    return {
+      name: format(dayDate, 'EEEE'), // e.g. "Monday"
+      date: format(dayDate, 'dd/MM'), // e.g. "21/09"
+      active: isSameDay(dayDate, new Date()), // Highlight real today
+      fullDate: dayDate
+    };
+  });
 
   const hours = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, '0')}:00`);
 
@@ -31,8 +38,8 @@ export const MainCalendarGrid: React.FC = () => {
     const end = new Date(task.endAt);
     
     // Day of week: 0 is Sunday, 1 is Monday
-    let day = start.getDay();
-    let col = day === 0 ? 8 : day + 1; // Mon=2, Tue=3, ..., Sun=8
+    // Since our grid starts with Sunday at column 2 (column 1 is time)
+    let col = start.getDay() + 2;
 
     // Using UTC to match our mock data ISO strings perfectly regardless of local timezone
     const startHour = start.getUTCHours(); 
@@ -48,7 +55,7 @@ export const MainCalendarGrid: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.titleSection}>
-          <h2>September, 2020</h2>
+          <h2>{format(currentDate, 'MMMM, yyyy')}</h2>
         </div>
         <div className={styles.viewToggle}>
           <div className={styles.toggleGroup}>
@@ -57,9 +64,9 @@ export const MainCalendarGrid: React.FC = () => {
             <button className={styles.toggleBtn}>Year</button>
           </div>
           <div className={styles.navGroup}>
-            <Button variant="secondary" size="sm" className={styles.navArrow}><ChevronLeft size={16}/></Button>
-            <Button variant="secondary" size="sm" className={styles.todayBtn}>Today</Button>
-            <Button variant="secondary" size="sm" className={styles.navArrow}><ChevronRight size={16}/></Button>
+            <Button variant="secondary" size="sm" className={styles.navArrow} onClick={prevWeek}><ChevronLeft size={16}/></Button>
+            <Button variant="secondary" size="sm" className={styles.todayBtn} onClick={setToday}>Today</Button>
+            <Button variant="secondary" size="sm" className={styles.navArrow} onClick={nextWeek}><ChevronRight size={16}/></Button>
           </div>
         </div>
       </div>
@@ -107,8 +114,10 @@ export const MainCalendarGrid: React.FC = () => {
           ))}
 
           {/* Dynamic Events from Zustand Store */}
-          {tasks.map(task => {
-            const pos = getGridPosition(task);
+          {tasks
+            .filter(task => isSameWeek(new Date(task.startAt), currentDate, { weekStartsOn: 0 }))
+            .map(task => {
+              const pos = getGridPosition(task);
             
             // Map categoryId to color class (cat-1=Personal, cat-2=Work, cat-3=Flight)
             let colorClass = styles.eventWork;

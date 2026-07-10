@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { addWeeks, subWeeks, addMonths, subMonths } from 'date-fns';
 
 export const TaskPriority = {
   Low: 0,
@@ -29,13 +30,20 @@ type AppState = {
   tasks: CalendarTaskDto[];
   activeModal: 'createTask' | null;
   theme: 'light' | 'dark';
-  
+  currentDate: Date; // Main calendar focus date
+  selectedMonth: Date; // Mini calendar view month
   
   // Actions
   addTask: (task: CalendarTaskDto) => void;
   openModal: (modal: 'createTask') => void;
   closeModal: () => void;
   toggleTheme: () => void;
+  nextWeek: () => void;
+  prevWeek: () => void;
+  nextMonthMini: () => void;
+  prevMonthMini: () => void;
+  setToday: () => void;
+  setDate: (date: Date) => void;
 };
 
 export const useAppStore = create<AppState>((set) => ({
@@ -80,9 +88,23 @@ export const useAppStore = create<AppState>((set) => ({
   ],
   activeModal: null,
   theme: 'light',
+  currentDate: new Date(),
+  selectedMonth: new Date(),
 
   addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
   openModal: (modal) => set({ activeModal: modal }),
   closeModal: () => set({ activeModal: null }),
   toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
+  nextWeek: () => set((state) => {
+    const newDate = addWeeks(state.currentDate, 1);
+    return { currentDate: newDate, selectedMonth: newDate };
+  }),
+  prevWeek: () => set((state) => {
+    const newDate = subWeeks(state.currentDate, 1);
+    return { currentDate: newDate, selectedMonth: newDate };
+  }),
+  nextMonthMini: () => set((state) => ({ selectedMonth: addMonths(state.selectedMonth, 1) })),
+  prevMonthMini: () => set((state) => ({ selectedMonth: subMonths(state.selectedMonth, 1) })),
+  setToday: () => set({ currentDate: new Date(), selectedMonth: new Date() }),
+  setDate: (date) => set({ currentDate: date, selectedMonth: date }),
 }));

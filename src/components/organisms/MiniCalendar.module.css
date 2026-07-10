@@ -36,13 +36,8 @@
   margin-bottom: 0.5rem;
 }
 
-.emptyDay {
-  font-size: 0.85rem;
-  color: var(--border-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 36px;
+.dayCell.emptyDay {
+  opacity: 0.25;
 }
 
 .dayCell {
@@ -93,4 +88,12 @@
 .today .dot {
   background-color: var(--text-inverse);
   opacity: 0.8;
+}
+
+.selected {
+  background-color: var(--border-color);
+}
+
+.selected:hover {
+  background-color: var(--border-color);
 }

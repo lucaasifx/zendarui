@@ -15,6 +15,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .notificationButton:hover {
@@ -39,10 +40,87 @@
   border: 2px solid var(--bg-surface);
 }
 
+.dropdownToggleItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.dropdownToggleItem:hover {
+  background-color: var(--bg-main);
+}
+
+.itemLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.itemLeft svg {
+  color: var(--text-secondary);
+}
+
+.dropdownToggleItem:hover .itemLeft svg {
+  color: var(--text-primary);
+}
+
+.switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.switchActive {
+  background-color: var(--color-primary);
+}
+
+.switchThumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0);
+}
+
+.switchActive .switchThumb {
+  transform: translateX(16px);
+}
+
+.userInfoWrapper {
+  position: relative;
+}
+
 .userInfo {
   display: flex;
   align-items: center;
   gap: 1rem;
+  user-select: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s ease;
+}
+
+.userInfo:hover {
+  background-color: var(--bg-main);
 }
 
 .userText {
@@ -64,6 +142,12 @@
   font-size: 0.75rem;
 }
 
+.avatarContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .avatar {
   width: 40px;
   height: 40px;
@@ -72,45 +156,133 @@
   border: 2px solid var(--border-color);
 }
 
-@media (max-width: 767px) {
-  .userText {
-    display: none;
+.chevron {
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 200px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-floating);
+  z-index: 100;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.dropdownItem:hover {
+  background-color: var(--bg-main);
+}
+
+.dropdownItem svg {
+  color: var(--text-secondary);
+}
+
+.dropdownItem:hover svg {
+  color: var(--text-primary);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 0.25rem 0.5rem;
+}
+
+.logout {
+  color: #FF5A5F;
+}
+
+.logout svg {
+  color: #FF5A5F !important;
+}
+
+.logout:hover {
+  background-color: #FF5A5F15;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.themeToggle {
-  position: relative;
-  width: 52px;
-  height: 28px;
-  border-radius: 14px;
-  background-color: var(--border-color);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  padding: 2px;
-  transition: background-color 0.3s ease;
+@media (max-width: 1023px) {
+  .notificationButton {
+    display: none;
+  }
+
+  .userMenuContainer {
+    display: block;
+    width: 100%;
+  }
+  
+  .userInfoWrapper {
+    width: 100%;
+  }
+
+  .userInfo {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background-color: var(--bg-main);
+  }
+
+  .userText {
+    display: flex !important; /* Force show text inside drawer */
+    align-items: flex-start;
+  }
+
+  .dropdown {
+    position: static;
+    grid-column: 1 / span 2;
+    width: 100%;
+    box-shadow: none;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-main);
+    margin-top: 0.5rem;
+    animation: none;
+  }
 }
 
-.themeToggleDark {
-  background-color: var(--color-primary);
+@media (max-width: 767px) {
+  /* On very small screens, let's keep the user text visible inside drawer since there is plenty of width in the drawer */
+  .userText {
+    display: flex;
+  }
 }
 
-.themeToggleThumb {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: white;
-  box-shadow: var(--shadow-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-primary);
-  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-  transform: translateX(0);
-}
 
-.themeToggleDark .themeToggleThumb {
-  transform: translateX(24px);
-  color: var(--color-primary);
-}

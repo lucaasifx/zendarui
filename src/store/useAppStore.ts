@@ -14,16 +14,26 @@ export type CalendarTaskDto = {
   title: string;
   description?: string;
   startAt: string; // ISO date string
-  endAt: string; // ISO date string
   taskPriority: TaskPriority;
   categoryId: string;
+  completed?: boolean;
 };
 
-// Mock categories matching our UI badges
-export const MOCK_CATEGORIES = [
-  { id: 'cat-1', name: 'Personal', colorType: 'personal' },
-  { id: 'cat-2', name: 'Work', colorType: 'work' },
-  { id: 'cat-3', name: 'Clients', colorType: 'flight' }, // using flight color for clients for now
+export type CategoryDto = {
+  id: string;
+  name: string;
+  color: string; // CSS color string (var or HEX)
+  icon: string; // Lucide icon name
+};
+
+// Mock categories
+export const MOCK_CATEGORIES: CategoryDto[] = [
+  { id: 'cat-1', name: 'Personal', color: 'var(--color-personal)', icon: 'User' },
+  { id: 'cat-2', name: 'Work', color: 'var(--color-work)', icon: 'Briefcase' },
+  { id: 'cat-3', name: 'Home', color: '#9b59b6', icon: 'Home' },
+  { id: 'cat-4', name: 'Health', color: '#FF5A5F', icon: 'Heart' },
+  { id: 'cat-5', name: 'Study', color: '#2DCA8C', icon: 'Book' },
+  { id: 'cat-6', name: 'Finance', color: '#F1C40F', icon: 'DollarSign' },
 ];
 
 type AppState = {
@@ -32,18 +42,23 @@ type AppState = {
   theme: 'light' | 'dark';
   currentDate: Date; // Main calendar focus date
   selectedMonth: Date; // Mini calendar view month
+  currentView: 'week' | 'month' | 'year';
   
   // Actions
   addTask: (task: CalendarTaskDto) => void;
   openModal: (modal: 'createTask') => void;
   closeModal: () => void;
   toggleTheme: () => void;
-  nextWeek: () => void;
-  prevWeek: () => void;
+  setView: (view: 'week' | 'month' | 'year') => void;
+  nextPeriod: () => void;
+  prevPeriod: () => void;
   nextMonthMini: () => void;
   prevMonthMini: () => void;
   setToday: () => void;
   setDate: (date: Date) => void;
+  toggleTaskCompletion: (taskId: string) => void;
+  selectedCategories: string[];
+  toggleCategoryFilter: (categoryId: string) => void;
 };
 
 export const useAppStore = create<AppState>((set) => ({
@@ -54,7 +69,6 @@ export const useAppStore = create<AppState>((set) => ({
       title: 'Show project to Jes Parker',
       description: '',
       startAt: '2020-09-21T07:00:00Z',
-      endAt: '2020-09-21T09:00:00Z',
       taskPriority: TaskPriority.Medium,
       categoryId: 'cat-3'
     },
@@ -63,7 +77,6 @@ export const useAppStore = create<AppState>((set) => ({
       title: 'Meeting with a team',
       description: '',
       startAt: '2020-09-25T07:00:00Z',
-      endAt: '2020-09-25T09:00:00Z',
       taskPriority: TaskPriority.High,
       categoryId: 'cat-2'
     },
@@ -72,7 +85,6 @@ export const useAppStore = create<AppState>((set) => ({
       title: 'Meet Jason at the International Airport',
       description: '',
       startAt: '2020-09-22T10:00:00Z',
-      endAt: '2020-09-22T12:00:00Z',
       taskPriority: TaskPriority.High,
       categoryId: 'cat-3'
     },
@@ -81,7 +93,6 @@ export const useAppStore = create<AppState>((set) => ({
       title: 'Call with Clark Kent',
       description: '',
       startAt: '2020-09-27T10:00:00Z',
-      endAt: '2020-09-27T12:00:00Z',
       taskPriority: TaskPriority.Medium,
       categoryId: 'cat-1'
     }
@@ -90,21 +101,44 @@ export const useAppStore = create<AppState>((set) => ({
   theme: 'light',
   currentDate: new Date(),
   selectedMonth: new Date(),
+  currentView: 'month',
+  selectedCategories: MOCK_CATEGORIES.map(c => c.id),
 
   addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
   openModal: (modal) => set({ activeModal: modal }),
   closeModal: () => set({ activeModal: null }),
   toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
-  nextWeek: () => set((state) => {
-    const newDate = addWeeks(state.currentDate, 1);
+  setView: (view) => set({ currentView: view }),
+  nextPeriod: () => set((state) => {
+    let newDate = state.currentDate;
+    if (state.currentView === 'week') {
+      newDate = addWeeks(state.currentDate, 1);
+    } else if (state.currentView === 'month') {
+      newDate = addMonths(state.currentDate, 1);
+    }
     return { currentDate: newDate, selectedMonth: newDate };
   }),
-  prevWeek: () => set((state) => {
-    const newDate = subWeeks(state.currentDate, 1);
+  prevPeriod: () => set((state) => {
+    let newDate = state.currentDate;
+    if (state.currentView === 'week') {
+      newDate = subWeeks(state.currentDate, 1);
+    } else if (state.currentView === 'month') {
+      newDate = subMonths(state.currentDate, 1);
+    }
     return { currentDate: newDate, selectedMonth: newDate };
   }),
   nextMonthMini: () => set((state) => ({ selectedMonth: addMonths(state.selectedMonth, 1) })),
   prevMonthMini: () => set((state) => ({ selectedMonth: subMonths(state.selectedMonth, 1) })),
   setToday: () => set({ currentDate: new Date(), selectedMonth: new Date() }),
   setDate: (date) => set({ currentDate: date, selectedMonth: date }),
+  toggleTaskCompletion: (taskId) => set((state) => ({
+    tasks: state.tasks.map(t => 
+      t.taskId === taskId ? { ...t, completed: !t.completed } : t
+    )
+  })),
+  toggleCategoryFilter: (categoryId) => set((state) => ({
+    selectedCategories: state.selectedCategories.includes(categoryId)
+      ? state.selectedCategories.filter(id => id !== categoryId)
+      : [...state.selectedCategories, categoryId]
+  })),
 }));

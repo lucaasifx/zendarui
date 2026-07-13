@@ -3,17 +3,29 @@ import styles from './MiniCalendar.module.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useAppStore } from '../../store/useAppStore';
-import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, format, isSameMonth, isSameDay } from 'date-fns';
+import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, format, isSameMonth, isSameDay, addDays } from 'date-fns';
+
+import { useTranslation } from 'react-i18next';
+import { ptBR, enUS } from 'date-fns/locale';
 
 export const MiniCalendar: React.FC = () => {
+  const { i18n } = useTranslation();
   const selectedMonth = useAppStore(state => state.selectedMonth);
   const currentDate = useAppStore(state => state.currentDate);
   const nextMonthMini = useAppStore(state => state.nextMonthMini);
   const prevMonthMini = useAppStore(state => state.prevMonthMini);
   const setDate = useAppStore(state => state.setDate);
   const tasks = useAppStore(state => state.tasks);
+  const selectedCategories = useAppStore(state => state.selectedCategories);
 
-  const daysOfWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  const locale = i18n.language === 'pt-BR' ? ptBR : enUS;
+
+  // Generate localized week day headers (2 characters)
+  const daysOfWeek = Array.from({ length: 7 }).map((_, i) => {
+    const day = addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), i);
+    // Format to 2 chars, e.g. "Do", "Se"
+    return format(day, 'eeeeee', { locale });
+  });
 
   const monthStart = startOfMonth(selectedMonth);
   const monthEnd = endOfMonth(selectedMonth);
@@ -25,7 +37,7 @@ export const MiniCalendar: React.FC = () => {
   return (
     <div className={styles.calendarContainer}>
       <div className={styles.header}>
-        <h3 className={styles.monthTitle}>{format(selectedMonth, 'MMMM, yyyy')}</h3>
+        <h3 className={styles.monthTitle}>{format(selectedMonth, 'MMMM, yyyy', { locale })}</h3>
         <div className={styles.navButtons}>
           <Button variant="ghost" size="sm" onClick={prevMonthMini}><ChevronLeft size={16} /></Button>
           <Button variant="ghost" size="sm" onClick={nextMonthMini}><ChevronRight size={16} /></Button>
@@ -41,7 +53,10 @@ export const MiniCalendar: React.FC = () => {
           const isToday = isSameDay(day, new Date());
           const isSelected = isSameDay(day, currentDate);
           
-          const dayTasks = tasks.filter(t => isSameDay(new Date(t.startAt), day));
+          const dayTasks = tasks.filter(t => 
+            isSameDay(new Date(t.startAt), day) && 
+            selectedCategories.includes(t.categoryId)
+          );
           const hasPersonal = dayTasks.some(t => t.categoryId === 'cat-1');
           const hasWork = dayTasks.some(t => t.categoryId === 'cat-2');
           

@@ -26,10 +26,52 @@
   letter-spacing: -0.5px;
 }
 
+.mobileActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .mobileMenuButton {
   display: block;
   color: var(--text-primary);
   padding: 0.5rem;
+}
+
+.notificationButton {
+  position: relative;
+  color: var(--text-secondary);
+  padding: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.notificationButton:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
+
+.badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #FF5A5F;
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--bg-surface);
 }
 
 .navigation {
@@ -115,6 +157,10 @@
 }
 
 @media (min-width: 1024px) {
+  .mobileActions {
+    display: none;
+  }
+  
   .mobileMenuButton {
     display: none;
   }

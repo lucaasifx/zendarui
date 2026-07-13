@@ -10,7 +10,8 @@ i18n
       'en-US': enUS,
       'pt-BR': ptBR
     },
-    fallbackLng: 'en-US',
+    lng: 'pt-BR',
+    fallbackLng: 'pt-BR',
     interpolation: {
       escapeValue: false
     }

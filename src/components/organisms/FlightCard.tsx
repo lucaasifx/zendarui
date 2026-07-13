@@ -5,24 +5,31 @@ import { Button } from '../ui/Button';
 
 import { useAppStore } from '../../store/useAppStore';
 
+import { format } from 'date-fns';
+
 export const FlightCard: React.FC = () => {
   const tasks = useAppStore(state => state.tasks);
   
-  // Find the first flight task
-  const flightTask = tasks.find(t => t.categoryId === 'cat-3');
+  // Find flight task by title keyword to avoid relying on a hardcoded category ID
+  const flightTask = tasks.find(t => 
+    t.title.toLowerCase().includes('airport') || 
+    t.title.toLowerCase().includes('flight') || 
+    t.title.toLowerCase().includes('voo')
+  );
   
   if (!flightTask) return null; // Don't render if no flight
 
   const now = new Date();
   const taskStart = new Date(flightTask.startAt);
-  const taskEnd = new Date(flightTask.endAt);
   
   const timeDiff = taskStart.getTime() - now.getTime();
   const minutesToGo = Math.ceil(timeDiff / (1000 * 60));
   const isUpcoming = minutesToGo > 0 && minutesToGo <= 60;
 
-  const startHourStr = taskStart.getUTCHours().toString().padStart(2, '0') + ':' + taskStart.getUTCMinutes().toString().padStart(2, '0');
-  const endHourStr = taskEnd.getUTCHours().toString().padStart(2, '0') + ':' + taskEnd.getUTCMinutes().toString().padStart(2, '0');
+  const startHourStr = format(taskStart, 'HH:mm');
+  // Mock a flight duration of 2 hours since tasks no longer have endAt
+  const taskEnd = new Date(taskStart.getTime() + 2 * 60 * 60 * 1000);
+  const endHourStr = format(taskEnd, 'HH:mm');
 
   return (
     <div className={styles.cardContainer}>

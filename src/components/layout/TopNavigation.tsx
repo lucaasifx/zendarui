@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './TopNavigation.module.css';
 import { useTranslation } from 'react-i18next';
-import { Search, Menu, LayoutDashboard, Calendar as CalendarIcon, PieChart, X } from 'lucide-react';
+import { Search, Menu, LayoutDashboard, Calendar as CalendarIcon, PieChart, X, Bell } from 'lucide-react';
 import { UserMenu } from './UserMenu';
 
 export const TopNavigation: React.FC = () => {
@@ -17,9 +17,15 @@ export const TopNavigation: React.FC = () => {
         <h1 className={styles.logoText}>Zendar</h1>
       </div>
 
-      <button className={styles.mobileMenuButton} onClick={toggleMobileMenu}>
-        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+      <div className={styles.mobileActions}>
+        <button className={styles.notificationButton} aria-label="Notifications">
+          <Bell size={20} />
+          <span className={styles.badge}>9</span>
+        </button>
+        <button className={styles.mobileMenuButton} onClick={toggleMobileMenu}>
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
 
       <nav className={`${styles.navigation} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}>
         <ul className={styles.navList}>

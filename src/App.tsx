@@ -5,8 +5,11 @@ import { SidebarRight } from './components/organisms/SidebarRight'
 import { ModalRoot } from './components/layout/ModalRoot'
 import { useAppStore } from './store/useAppStore'
 
+import { useTranslation } from 'react-i18next'
+
 function App() {
   const theme = useAppStore(state => state.theme)
+  const { i18n } = useTranslation()
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -15,6 +18,10 @@ function App() {
       document.documentElement.classList.remove('dark')
     }
   }, [theme])
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.language || 'pt-BR'
+  }, [i18n.language])
 
   return (
     <>
